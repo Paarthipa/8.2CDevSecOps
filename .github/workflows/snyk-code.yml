@@ -21,12 +21,16 @@ jobs:
           version: latest
 
       - name: Snyk Code Test
-        run: snyk code test --sarif-file-output=snyk-code.sarif.json
+        run: |
+          snyk code test --sarif-file-output=snyk-code.sarif.json || echo "Snyk failed"
+          ls -l
+          cat snyk-code.sarif.json || echo "SARIF not generated"
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Upload SARIF results
+        if: success() || failure()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk-code.sarif.json
