@@ -1,4 +1,4 @@
-name: "snyk security scans"
+name: "Snyk Code Test"
 
 on: [push, pull_request]
 
@@ -19,12 +19,6 @@ jobs:
       - uses: snyk/actions/setup@master
         with:
           version: latest
-
-      - name: Snyk Dependency Test
-        run: snyk test --sarif-file-output=snyk-deps.sarif.json
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Snyk Code Test
         run: snyk code test --sarif-file-output=snyk-code.sarif.json
